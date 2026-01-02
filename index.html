@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>مستشفى ابوالعزايم - نظام إدارة المرضى</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <img src="2.jpg" alt="مستشفى ابوالعزايم">
+        <h1>مستشفى ابوالعزايم</h1>
+        <h3>. ® Design by ZM CO </h3>
+    </div>
+
+    <!-- صفحة تسجيل الدخول -->
+    <div id="loginPage" class="box">
+        <h1>تسجيل الدخول</h1>
+        <input type="text" id="username" placeholder="اسم المستخدم">
+        <input type="password" id="password" placeholder="كلمة المرور">
+        <button onclick="checkLogin()">دخول</button>
+        <p id="loginMsg" style="color:red;text-align:center;"></p>
+    </div>
+
+    <!-- اللوحة الرئيسية -->
+    <div id="mainPage" class="box hidden">
+        <h1 style="text-align:center;color:#ff8c00;">لوحة التحكم - مستشفى أبو العزايم</h1>
+        <div id="mainButtons" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 40px 0;">
+            <button id="btnPatientEntry" onclick="showPatientEntry()">دخول مريض جديد</button>
+            <button id="btnLab" onclick="showLab()">معمل</button>
+            <button id="btnRadiology" onclick="showRadiology()">أشعة</button>
+            <button id="btnPharmacy" onclick="showPharmacy()">صيدلية</button>
+            <button id="btnMedicalServices" onclick="showMedicalServices()">خدمات طبية</button>
+            <button id="btnOtherServices" onclick="showOtherServices()">خدمات أخرى</button>
+            <button id="btnPatientsAccounts" onclick="showPatientsAccounts()">حسابات المرضى</button>
+            <button id="btnInvoice" onclick="showInvoice()">فاتورة</button>
+            <button id="btnMedicalFiles" onclick="showMedicalFiles()">ملفات طبية</button>
+            <button id="btnServiceFiles" onclick="showServiceFiles()">ملفات خدمات</button>
+            <button id="btnReports" onclick="showReports()">تقارير</button>
+            <button id="btnStatistics" onclick="showStatistics()">إحصائيات</button>
+            <button id="btnServicesPrices" onclick="showServicesPrices()">أسعار الخدمات</button>
+            <button id="btnUsersManagement" onclick="showUsersManagement()">إدارة المستخدمين</button>
+            <button id="btnTreasury" onclick="showTreasury()">خزينة</button>
+        </div>
+        <button onclick="logout()" style="background:#ff4444;width:100%;padding:15px;font-size:18px;">تسجيل خروج</button>
+    </div>
+
+    <!-- دخول مريض جديد -->
+    <div id="patientEntryPage" class="box hidden">
+        <h1>إدخال بيانات مريض جديد</h1>
+        <input type="text" id="todayDate" readonly placeholder="تاريخ اليوم">
+        <input type="datetime-local" id="entryDate" placeholder="تاريخ الدخول">
+        <div class="row">
+            <input type="text" id="patientCode" placeholder="كود المريض">
+            <input type="text" id="roomNumber" placeholder="رقم الغرفة">
+        </div>
+        <div class="row">
+            <select id="caseType">
+                <option value="">اختر نوع الحالة</option>
+                <option value="نفسى حريم">نفسي حريم</option>
+                <option value="ادمان حريم">ادمان حريم</option>
+                <option value="نفسي">نفسي</option>
+                <option value="إدمان">إدمان</option>
+            </select>
+            <select id="roomLevel">
+                <option value="">اختر نوع الغرفة</option>
+                <option value="3 سرير">3 سرير</option>
+                <option value="2 سرير">2 سرير</option>
+                <option value="1 سرير">1 سرير</option>
+                <option value="2 سرير-مجهز">2 سرير-مجهز</option>
+                <option value="1 سرير-مجهز">1 سرير-مجهز</option>
+                <option value="جناح">جناح</option>
+            </select>
+        </div>
+        <input type="number" id="accommodationPrice" placeholder="سعر الإقامة" value="0">
+        <input type="text" id="patientName" placeholder="اسم المريض">
+        <input type="text" id="address" placeholder="العنوان">
+        <div class="row">
+            <input type="text" id="phones" placeholder="أرقام التليفون">
+            <input type="text" id="idNumber" placeholder="رقم البطاقة">
+        </div>
+        <div class="row">
+            <input type="text" id="doctor" placeholder="الطبيب المعالج">
+            <input type="text" id="responsible" placeholder="مسئول الحالة">
+        </div>
+        <div class="row">
+            <input type="text" id="responsibleNationalId" placeholder="رقم قومي مسئول الحالة">
+            <input type="text" id="kinship" placeholder="درجة القرابة">
+        </div>
+        <input type="text" id="residence" placeholder="محل الإقامة">
+        <input type="number" id="entryPayment" placeholder="دفعة الدخول" value="0">
+        
+        <label style="color:#ff8c00;font-weight:bold;">رفع ملفات (رقم قومى,استمارة,اقرارات)</label>
+        <input type="file" id="patientFiles" multiple accept="image/*,application/pdf">
+        <div id="filePreview" style="margin-top:20px; display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:10px;"></div>
+        <div id="uploadedFilesList"></div>
+
+        <button onclick="savePatient()">حفظ البيانات</button>
+        <button onclick="backToMain()">رجوع</button>
+        <p id="msg" style="color:#00ffaa;"></p>
+    </div>
+
+    <!-- معمل -->
+    <div id="labPage" class="box hidden">
+        <h1>معمل</h1>
+        <table id="labTable">
+            <thead><tr><th>اسم التحليل</th><th>السعر</th><th>إجراء</th></tr></thead>
+            <tbody id="labTableBody"></tbody>
+        </table>
+        <button onclick="addLabRow()">+ إضافة تحليل</button>
+        <div style="text-align:right;font-size:18px;color:#ff8c00;">الإجمالي: <span id="labTotal">0</span> جنيه</div>
+        <input type="text" id="labPatientCode" placeholder="كود المريض">
+        <button onclick="loadPatientForLab()">تحميل المريض</button>
+        <input type="text" id="labPatientName" readonly placeholder="اسم المريض">
+        <input type="text" id="labProvider" placeholder="مقدم الخدمة">
+        <button onclick="saveLabData()">حفظ</button>
+        <button onclick="backToMain()">رجوع</button>
+        <p id="labMsg" style="color:#00ffaa;"></p>
+    </div>
+
+    <!-- أشعة -->
+    <div id="radiologyPage" class="box hidden">
+        <h1>أشعة</h1>
+        <table id="radTable">
+            <thead><tr><th>نوع الأشعة</th><th>السعر</th><th>إجراء</th></tr></thead>
+            <tbody id="radTableBody"></tbody>
+        </table>
+        <button onclick="addRadRow()">+ إضافة أشعة</button>
+        <div style="text-align:right;font-size:18px;color:#ff8c00;">الإجمالي: <span id="radTotal">0</span> جنيه</div>
+        <input type="text" id="radPatientCode" placeholder="كود المريض">
+        <button onclick="loadPatientForRadiology()">تحميل المريض</button>
+        <input type="text" id="radPatientName" readonly placeholder="اسم المريض">
+        <input type="text" id="radProvider" placeholder="مقدم الخدمة">
+        <button onclick="saveRadData()">حفظ</button>
+        <button onclick="backToMain()">رجوع</button>
+        <p id="radMsg" style="color:#00ffaa;"></p>
+    </div>
+
+    <!-- صيدلية -->
+    <div id="pharmacyPage" class="box hidden">
+        <h1>صيدلية</h1>
+        <table id="pharmTable">
+            <thead><tr><th>اسم الدواء</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th><th>إجراء</th></tr></thead>
+            <tbody id="pharmTableBody"></tbody>
+        </table>
+        <button onclick="addPharmRow()" style="background: #4CAF50; margin: 10px 5px;">+ إضافة دواء جديد</button>
+        <div style="text-align:right;font-size:18px;color:#ff8c00;">الإجمالي: <span id="pharmTotal">0</span> جنيه</div>
+        <input type="text" id="pharmPatientCode" placeholder="كود المريض">
+        <button onclick="loadPatientForPharmacy()">تحميل المريض</button>
+        <input type="text" id="pharmPatientName" readonly placeholder="اسم المريض">
+        <input type="text" id="pharmProvider" placeholder="الصيدلي">
+        <button onclick="savePharmData()">حفظ</button>
+        <button onclick="backToMain()">رجوع</button>
+        <p id="pharmMsg" style="color:#00ffaa;"></p>
+    </div>
+
+    <!-- خدمات طبية -->
+    <div id="medicalServicesPage" class="box hidden">
+        <h1>خدمات طبية</h1>
+        <table id="medTable">
+            <thead><tr><th>نوع الخدمة</th><th>السعر</th><th>إجراء</th></tr></thead>
+            <tbody id="medTableBody"></tbody>
+        </table>
+        <button onclick="addMedRow()">+ إضافة خدمة</button>
+        <div style="text-align:right;font-size:18px;color:#ff8c00;">الإجمالي: <span id="medTotal">0</span> جنيه</div>
+        <input type="text" id="medPatientCode" placeholder="كود المريض">
+        <button onclick="loadPatientForMedical()">تحميل المريض</button>
+        <input type="text" id="medPatientName" readonly placeholder="اسم المريض">
+        <input type="text" id="medProvider" placeholder="مقدم الخدمة">
+        <button onclick="saveMedData()">حفظ</button>
+        <button onclick="backToMain()">رجوع</button>
+        <p id="medMsg" style="color:#00ffaa;"></p>
+    </div>
+
+    <!-- خدمات أخرى -->
+    <div id="otherServicesPage" class="box hidden">
+        <h1>خدمات أخرى</h1>
+        <table id="otherTable">
+            <thead><tr><th>وصف الخدمة</th><th>السعر</th><th>إجراء</th></tr></thead>
+            <tbody id="otherTableBody"></tbody>
+        </table>
+        <button onclick="addOtherRow()">+ إضافة خدمة</button>
+        <div style="text-align:right;font-size:18px;color:#ff8c00;">الإجمالي: <span id="otherTotal">0</span> جنيه</div>
+        <input type="text" id="otherPatientCode" placeholder="كود المريض">
+        <button onclick="loadPatientForOther()">تحميل المريض</button>
+        <input type="text" id="otherPatientName" readonly placeholder="اسم المريض">
+        <input type="text" id="otherProvider" placeholder="مقدم الخدمة">
+        <button onclick="saveOtherData()">حفظ</button>
+        <button onclick="backToMain()">رجوع</button>
+        <p id="otherMsg" style="color:#00ffaa;"></p>
+    </div>
+
+    <!-- حسابات المرضى -->
+    <div id="patientsAccountsPage" class="box hidden">
+        <h1>حسابات المرضى</h1>
+        <input type="text" id="searchInput" placeholder="بحث بالكود أو الاسم" onkeyup="loadPatientsAccounts()">
+        <button onclick="loadPatientsAccounts()" style="background: #4CAF50; margin-right: 10px;">تحديث الحسابات</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>كود</th>
+                    <th>الاسم</th>
+                    <th>إقامة</th>
+                    <th>معمل</th>
+                    <th>أشعة</th>
+                    <th>صيدلية</th>
+                    <th>طبية</th>
+                    <th>أخرى</th>
+                    <th>مدفوع</th>
+                    <th>مستحق</th>
+                    <th>فائض</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="accountsTableBody"></tbody>
+        </table>
+        <button onclick="backToMain()">رجوع</button>
+    </div>
+
+    <!-- فاتورة -->
+    <div id="invoicePage" class="box hidden">
+        <h1>إصدار فاتورة</h1>
+        <input type="text" id="invoicePatientCode" placeholder="كود المريض">
+        <button onclick="loadPatientForInvoice()">تحميل البيانات</button>
+        <div id="invoiceContent" style="margin-top:30px;"></div>
+        <button onclick="window.print()">طباعة</button>
+        <button onclick="backToMain()">رجوع</button>
+    </div>
+
+    <!-- ملفات طبية -->
+    <div id="medicalFilesPage" class="box hidden">
+        <h1>ملفات طبية للمرضى</h1>
+        <input type="text" id="medicalSearch" placeholder="بحث بالكود أو الاسم" onkeyup="loadMedicalFiles()">
+        <div id="medicalPatientsList" style="margin-top: 20px; max-height: 400px; overflow-y: auto;">
+            <!-- قائمة المرضى ستظهر هنا -->
+        </div>
+        <div id="medicalFileUploadSection" style="margin-top: 30px; display: none;">
+            <h3 id="medicalCurrentPatient"></h3>
+            <input type="file" id="medicalFilesInput" multiple accept="image/*,application/pdf">
+            <button onclick="uploadMedicalFiles()">رفع الملفات</button>
+            <div id="medicalFilesPreview"></div>
+        </div>
+        <button onclick="backToMain()">رجوع</button>
+    </div>
+
+    <!-- ملفات خدمات -->
+    <div id="serviceFilesPage" class="box hidden">
+        <h1>ملفات الخدمات</h1>
+        <input type="text" id="serviceSearch" placeholder="بحث بالكود أو الاسم" onkeyup="loadServiceFiles()">
+        <div id="servicePatientsList" style="margin-top: 20px; max-height: 400px; overflow-y: auto;">
+            <!-- قائمة المرضى ستظهر هنا -->
+        </div>
+        <div id="serviceFileUploadSection" style="margin-top: 30px; display: none;">
+            <h3 id="serviceCurrentPatient"></h3>
+            <select id="serviceType">
+                <option value="">اختر نوع الخدمة</option>
+                <option value="معمل">معمل</option>
+                <option value="أشعة">أشعة</option>
+                <option value="صيدلية">صيدلية</option>
+                <option value="خدمات طبية">خدمات طبية</option>
+                <option value="خدمات أخرى">خدمات أخرى</option>
+            </select>
+            <input type="file" id="serviceFilesInput" multiple accept="image/*,application/pdf">
+            <button onclick="uploadServiceFiles()">رفع الملفات</button>
+            <div id="serviceFilesPreview"></div>
+        </div>
+        <button onclick="backToMain()">رجوع</button>
+    </div>
+
+    <!-- تقارير -->
+    <div id="reportPage" class="box hidden">
+        <h1>التقارير</h1>
+        <div class="row">
+            <button onclick="showOccupancyReport()">تقرير الإشغال</button>
+            <button onclick="showExitedPatientsReport()">المرضى المغادرين</button>
+            <button onclick="showFinancialReport()">تقرير مالي</button>
+            <button onclick="showRevenueReport()">تقرير الإيرادات</button>
+            <button onclick="showServicesReport()">تقرير الخدمات</button>
+            <button onclick="showPatientsReport()">تقرير المرضى</button>
+        </div>
+        <div id="reportContent" style="margin-top: 30px;"></div>
+        <div class="row">
+            <button onclick="exportToExcel()">تصدير Excel</button>
+            <button onclick="window.print()">طباعة التقرير</button>
+            <button onclick="backToMain()">رجوع</button>
+        </div>
+    </div>
+
+    <!-- إحصائيات -->
+    <div id="statisticsPage" class="box hidden">
+        <h1>الإحصائيات</h1>
+        <div class="row">
+            <button onclick="loadStatistics('today')">إحصائيات اليوم</button>
+            <button onclick="loadStatistics('week')">إحصائيات الأسبوع</button>
+            <button onclick="loadStatistics('month')">إحصائيات الشهر</button>
+            <button onclick="loadStatistics('all')">إحصائيات عامة</button>
+        </div>
+        <div id="statisticsContent" style="margin-top: 30px;"></div>
+        <div class="row">
+            <button onclick="exportStatistics()">تصدير الإحصائيات</button>
+            <button onclick="backToMain()">رجوع</button>
+        </div>
+    </div>
+
+    <!-- أسعار الخدمات -->
+    <div id="servicesPricesPage" class="box hidden">
+        <h1>أسعار الخدمات</h1>
+        <input type="text" id="newServiceName" placeholder="اسم الخدمة">
+        <input type="number" id="newServicePrice" placeholder="السعر" value="0">
+        <button onclick="addNewService()">إضافة</button>
+        <table>
+            <thead><tr><th>الخدمة</th><th>السعر</th><th>إجراء</th></tr></thead>
+            <tbody id="servicesListBody"></tbody>
+        </table>
+        <button onclick="backToMain()">رجوع</button>
+    </div>
+
+    <!-- إدارة المستخدمين -->
+    <div id="usersManagementPage" class="box hidden">
+        <h1>إدارة المستخدمين</h1>
+        <button onclick="showCreateAccount()">إنشاء حساب جديد</button>
+        <div id="usersTable"></div>
+        <button onclick="backToMain()">رجوع</button>
+    </div>
+
+    <!-- إنشاء حساب جديد مع صلاحيات -->
+    <div id="createAccountPage" class="box hidden">
+        <h1>إنشاء حساب جديد</h1>
+        <input type="text" id="newUsername" placeholder="اسم المستخدم">
+        <input type="password" id="newPassword" placeholder="كلمة المرور">
+        <select id="newRole">
+            <option value="admin">مدير</option>
+            <option value="user">مستخدم</option>
+        </select>
+        <h3>الصفحات المتاحة</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+            <label><input type="checkbox" class="permission" value="patiententry">دخول مريض</label>
+            <label><input type="checkbox" class="permission" value="lab">معمل</label>
+            <label><input type="checkbox" class="permission" value="radiology">أشعة</label>
+            <label><input type="checkbox" class="permission" value="pharmacy">صيدلية</label>
+            <label><input type="checkbox" class="permission" value="medicalservices">خدمات طبية</label>
+            <label><input type="checkbox" class="permission" value="otherservices">خدمات أخرى</label>
+            <label><input type="checkbox" class="permission" value="patientsaccounts">حسابات</label>
+            <label><input type="checkbox" class="permission" value="invoice">فاتورة</label>
+            <label><input type="checkbox" class="permission" value="medicalfiles">ملفات طبية</label>
+            <label><input type="checkbox" class="permission" value="servicefiles">ملفات خدمات</label>
+            <label><input type="checkbox" class="permission" value="reports">تقارير</label>
+            <label><input type="checkbox" class="permission" value="statistics">إحصائيات</label>
+            <label><input type="checkbox" class="permission" value="servicesprices">أسعار خدمات</label>
+            <label><input type="checkbox" class="permission" value="usersmanagement">إدارة مستخدمين</label>
+            <label><input type="checkbox" class="permission" value="treasury">خزينة</label>
+        </div>
+        <button onclick="createNewAccount()">إنشاء</button>
+        <button onclick="backToMain()">رجوع</button>
+        <p id="createMsg" style="color:#00ffaa;"></p>
+    </div>
+
+    <!-- خزينة جديدة -->
+    <div id="treasuryPage" class="box hidden">
+        <h1>خزينة المستشفى</h1>
+        
+        <!-- إدارة اليوم -->
+        <div class="treasury-section">
+            <h2 style="color:#ff8c00;">إدارة اليوم</h2>
+            <div class="row">
+                <button onclick="openDay()" style="background:#4CAF50;">فتح اليوم</button>
+                <button onclick="closeDay()" style="background:#ff4444;">قفل اليوم</button>
+            </div>
+            <p id="dayStatus" style="font-weight:bold; text-align:center; padding:10px;"></p>
+        </div>
+        
+        <!-- المعاملات -->
+        <div class="treasury-section">
+            <h2 style="color:#ff8c00;">إضافة معاملة</h2>
+            <select id="transactionType">
+                <option value="internal">مريض داخلي</option>
+                <option value="other">أخرى متنوعة</option>
+            </select>
+            
+            <!-- قسم المريض الداخلي -->
+            <div id="internalSection">
+                <input type="text" id="internalPatientCode" placeholder="كود المريض">
+                <button onclick="loadInternalPatient()">تحميل المريض</button>
+                <input type="text" id="internalPatientName" readonly placeholder="اسم المريض">
+                <input type="text" id="internalDescription" readonly placeholder="البيان (سيظهر تلقائياً)">
+            </div>
+            
+            <!-- قسم أخرى متنوعة -->
+            <div id="otherSection" style="display:none;">
+                <input type="text" id="otherDescription" placeholder="أدخل البيان">
+            </div>
+            
+            <input type="number" id="transactionAmount" placeholder="المبلغ" value="0">
+            <select id="transactionCategory">
+                <option value="دفعة">دفعة من مريض</option>
+                <option value="ايرادات">ايرادات متنوعة</option>
+                <option value="مصروفات">مصروفات</option>
+                <option value="مرتجعات">مرتجعات</option>
+            </select>
+            <button onclick="addTransaction()">إضافة المعاملة</button>
+        </div>
+        
+        <!-- الرصيد -->
+        <div class="treasury-section">
+            <h2 style="color:#ff8c00;">رصيد اليوم</h2>
+            <div id="balanceInfo" style="text-align:center; font-size:24px; padding:20px; background:rgba(255,140,0,0.1); border-radius:10px;">
+                <p>إجمالي الإيرادات: <span id="totalRevenue">0</span> جنيه</p>
+                <p>إجمالي المصروفات: <span id="totalExpenses">0</span> جنيه</p>
+                <p style="font-weight:bold; color:#00ffaa;">صافي الرصيد: <span id="netBalance">0</span> جنيه</p>
+            </div>
+            <button onclick="showDailyTransactions()" style="background:#2196F3;">عرض معاملات اليوم</button>
+        </div>
+        
+        <!-- معاملات اليوم -->
+        <div id="dailyTransactions" style="margin-top:20px; display:none;">
+            <h3>معاملات اليوم</h3>
+            <table id="transactionsTable">
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>البيان</th>
+                        <th>المبلغ</th>
+                        <th>النوع</th>
+                        <th>إجراء</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionsBody"></tbody>
+            </table>
+        </div>
+        
+        <!-- إيصال -->
+        <div id="receiptSection" style="margin-top:30px; padding:20px; border:2px solid #ff8c00; border-radius:10px; display:none;">
+            <h3 style="color:#ff8c00; text-align:center;">إيصال استلام</h3>
+            <div id="receiptContent"></div>
+            <button onclick="printReceipt()">طباعة الإيصال</button>
+        </div>
+        
+        <button onclick="backToMain()">رجوع</button>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

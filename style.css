@@ -1,0 +1,311 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0a1d37, #1e3a5f);
+    color: #fff;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header img {
+    width: 220px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 0 30px #ff8c00;
+    border: 4px solid #ff8c00;
+}
+
+.header h1 {
+    margin-top: 15px;
+    font-size: 36px;
+    color: #ff8c00;
+    text-shadow: 0 0 10px #ff8c00;
+}
+
+.header h3 {
+    color: #ddd;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.box {
+    background: rgba(10, 29, 55, 0.95);
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    margin-top: 20px;
+    border: 1px solid #ff8c00;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #ff8c00;
+    margin-bottom: 20px;
+}
+
+input, select, button, textarea {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+input, select, textarea {
+    background: #0f2b44;
+    color: white;
+    border: 1px solid #2a4a6d;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #ff8c00;
+    box-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
+}
+
+button {
+    background: linear-gradient(135deg, #ff8c00, #ff6b00);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #ff9c2a, #ff8c00);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+@media (max-width: 768px) {
+    .row {
+        grid-template-columns: 1fr;
+    }
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    background: #0f2b44;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    border: 1px solid #2a4a6d;
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background: #1e3a5f;
+    color: #ff8c00;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background: rgba(30, 58, 95, 0.3);
+}
+
+tr:hover {
+    background: rgba(255, 140, 0, 0.1);
+}
+
+/* أزرار خاصة */
+button[style*="background:#4CAF50"] {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32) !important;
+}
+
+button[style*="background:#ff4444"] {
+    background: linear-gradient(135deg, #ff4444, #c62828) !important;
+}
+
+button[style*="background:#2196F3"] {
+    background: linear-gradient(135deg, #2196F3, #1565C0) !important;
+}
+
+/* الأقسام في الخزينة */
+.treasury-section {
+    background: rgba(30, 58, 95, 0.5);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    border: 1px solid #2a4a6d;
+}
+
+.treasury-section h2 {
+    margin-top: 0;
+    border-bottom: 2px solid #ff8c00;
+    padding-bottom: 10px;
+}
+
+/* معاينة الملفات */
+.file-preview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.file-preview-item {
+    border: 1px solid #ff8c00;
+    border-radius: 10px;
+    padding: 10px;
+    background: #0f2b44;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.file-preview-item:hover {
+    transform: scale(1.05);
+}
+
+.file-preview-item img {
+    max-width: 100%;
+    max-height: 150px;
+    border-radius: 8px;
+}
+
+.file-preview-item iframe {
+    width: 100%;
+    height: 200px;
+    border: none;
+}
+
+/* قائمة المرضى */
+.patient-list {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #2a4a6d;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.patient-item {
+    background: rgba(255, 140, 0, 0.1);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 1px solid #ff8c00;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.patient-item:hover {
+    background: rgba(255, 140, 0, 0.2);
+    transform: translateX(-5px);
+}
+
+/* رسائل النجاح */
+.success-message {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 15px 0;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* شريط البحث */
+.search-container {
+    position: relative;
+    margin: 20px 0;
+}
+
+.search-container input {
+    padding-right: 40px;
+}
+
+.search-container::after {
+    content: "🔍";
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ff8c00;
+}
+
+/* الطباعة */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .box {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        background: white !important;
+    }
+    
+    button, .no-print {
+        display: none !important;
+    }
+    
+    table {
+        border: 1px solid #000 !important;
+    }
+    
+    th {
+        background: #eee !important;
+        color: #000 !important;
+    }
+}
+
+/* شريط التمرير */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f2b44;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ff8c00;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ff9c2a;
+}
