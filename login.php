@@ -28,14 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تسجيل الدخول - مستشفى أبو العزايم</title>
+    <title>تسجيل الدخول - مستشفى أبو الهول</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <img src="2.jpg" alt="مستشفى ابوالعزايم">
-        <h1>مستشفى ابوالعزايم</h1>
+        <img src="2.jpg" alt="مستشفى ابو الهول">
+        <h1>مستشفى ابو الهول</h1>
     </div>
     <div class="box">
         <h1>تسجيل الدخول</h1>
